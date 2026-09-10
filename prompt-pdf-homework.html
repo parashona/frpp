@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PDF Content Homework</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #064e3b; 
+      --bg-gradient-end: #020617;
+      --card-bg: rgba(16, 185, 129, 0.05);
+      --card-border: rgba(16, 185, 129, 0.2);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-heading: #ffffff;
+      --accent-primary: #10b981; 
+      --accent-hover: #34d399;
+      --accent-success: #059669;
+      --code-bg: rgba(0, 0, 0, 0.4);
+      --shadow-color: rgba(0, 0, 0, 0.5);
+      --input-bg: rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 40px 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      max-width: 1000px;
+      width: 100%;
+      margin: 0 auto;
+      flex-grow: 1;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      letter-spacing: -1px;
+      text-transform: uppercase;
+    }
+
+    /* Input Section Styles */
+    .input-section {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 40px var(--shadow-color);
+      backdrop-filter: blur(12px);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--accent-primary);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 14px;
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+    }
+
+    .prompts-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    /* Prompt Card Styles */
+    .prompt-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: 0 10px 40px var(--shadow-color);
+      backdrop-filter: blur(12px);
+      padding: 35px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+
+    .prompt-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent-primary);
+    }
+
+    .prompt-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .prompt-label::after {
+      content: "";
+      height: 1px;
+      flex-grow: 1;
+      background: var(--card-border);
+    }
+
+    .prompt-text {
+      background-color: var(--code-bg);
+      padding: 24px;
+      border-radius: 12px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.95rem;
+      color: #ecfdf5;
+      line-height: 1.5;
+      margin-bottom: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    
+    /* Button Styles */
+    .copy-button {
+      align-self: flex-end;
+      padding: 12px 24px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #ffffff;
+      background-color: var(--accent-primary);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .copy-button:hover {
+      background-color: var(--accent-hover);
+      box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+    }
+
+    .copy-button.copied {
+      background-color: var(--accent-success);
+    }
+
+    .icon { width: 16px; height: 16px; }
+    .copied-icon { display: none; }
+    .copy-button.copied .copy-icon { display: none; }
+    .copy-button.copied .copied-icon { display: inline-block; }
+
+    footer {
+        margin-top: 60px;
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        padding-bottom: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>PDF Content Homework</h1>
+    </header>
+
+    <div class="input-section">
+      <div class="field-group">
+        <label for="promptInput">[Insert Your Prompt Here]</label>
+        <textarea id="promptInput" placeholder="Paste your core prompt here..."></textarea>
+      </div>
+      <div class="field-group">
+        <label for="offerNameInput">Official Product Title: [Offer Name]</label>
+        <textarea id="offerNameInput" placeholder="Enter product title..."></textarea>
+      </div>
+    </div>
+
+    <main class="prompts-stack">
+      
+      <!-- Prompt #1 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #1</div>
+        <pre class="prompt-text" data-template="Please review the prompt below and provide the following information:
+
+1. Prompt Name
+2. Prompt Description
+3. Who Should Use It
+4. Why, Where, and When to Use It
+5. How It Works
+6. What Transformation It Brings and How
+7. How to Use It
+
+PROMPT:
+
+[Insert Your Prompt Here]">Please review the prompt below and provide the following information:
+
+1. Prompt Name
+2. Prompt Description
+3. Who Should Use It
+4. Why, Where, and When to Use It
+5. How It Works
+6. What Transformation It Brings and How
+7. How to Use It
+
+PROMPT:
+
+[Insert Your Prompt Here]</pre>
+        <button class="copy-button" onclick="copyText(this)">
+          <svg class="icon copy-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <svg class="icon copied-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M4.5 12.75l6 6 9-13.5" /></svg>
+          <span class="button-text">Copy Prompt</span>
+        </button>
+      </div>
+
+      <!-- Prompt #2 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #2</div>
+        <pre class="prompt-text" data-template="Rename it based on this sub-title of the free report:
+অনলাইনে আয় করার জন্য কোথায় কাজ পাবেন, তার আগে বুঝুন আপনার কাজের জন্য কে টাকা দিতে পারে।  
+
+
+“Who Will Pay for Your Skill?” নামটি আরও সংক্ষিপ্ত, স্মরণীয় এবং paid prompt হিসেবে আকর্ষণীয় করার জন্য ১০টি polished English বিকল্প দিন।
+
+Don't focus on the word and perspective of &quot;Skill”
+
+May I use it?: &quot;Who will pay me?&quot;">Rename it based on this sub-title of the free report:
+অনলাইনে আয় করার জন্য কোথায় কাজ পাবেন, তার আগে বুঝুন আপনার কাজের জন্য কে টাকা দিতে পারে।  
+
+
+“Who Will Pay for Your Skill?” নামটি আরও সংক্ষিপ্ত, স্মরণীয় এবং paid prompt হিসেবে আকর্ষণীয় করার জন্য ১০টি polished English বিকল্প দিন।
+
+Don't focus on the word and perspective of "Skill”
+
+May I use it?: "Who will pay me?"</pre>
+        <button class="copy-button" onclick="copyText(this)">
+          <svg class="icon copy-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <svg class="icon copied-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M4.5 12.75l6 6 9-13.5" /></svg>
+          <span class="button-text">Copy Prompt</span>
+        </button>
+      </div>
+
+      <!-- Prompt #3 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #3</div>
+        <pre class="prompt-text" data-template="Please review the prompt below and provide the following information:
+
+1. Prompt Name: [Offer Name]
+2. Prompt Description
+3. Who Should Use It
+4. Why, Where, and When to Use It
+5. How It Works
+6. What Transformation It Brings and How
+7. How to Use It
+
+PROMPT:
+
+[Insert Your Prompt Here]">Please review the prompt below and provide the following information:
+
+1. Prompt Name: [Offer Name]
+2. Prompt Description
+3. Who Should Use It
+4. Why, Where, and When to Use It
+5. How It Works
+6. What Transformation It Brings and How
+7. How to Use It
+
+PROMPT:
+
+[Insert Your Prompt Here]</pre>
+        <button class="copy-button" onclick="copyText(this)">
+          <svg class="icon copy-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <svg class="icon copied-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M4.5 12.75l6 6 9-13.5" /></svg>
+          <span class="button-text">Copy Prompt</span>
+        </button>
+      </div>
+
+      <!-- Prompt #4 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #4</div>
+        <pre class="prompt-text" data-template="TASK
+
+Based on the AI prompt provided below, write a strong, ready-to-use product description for its sales page.
+
+Treat the AI prompt itself as the product being sold.
+
+Analyze the actual prompt carefully and use its capabilities, intended use, target user, problem solved, distinctive approach, and practical benefits as the foundation of the product description.
+
+If an official product title, author name, or brand name is provided, preserve it exactly.
+
+Do not rename the product or invent a different positioning.
+
+PRODUCT DESCRIPTION GOAL
+
+Write a product description that helps a potential buyer quickly understand:
+
+- What problem this prompt helps solve
+- Who the prompt is for
+- What the buyer can use it to accomplish
+- Why the prompt is useful
+- What makes its approach distinctive
+- What the buyer can understand, create, decide, improve, simplify, or avoid by using it
+- Why having this ready-to-use prompt can be more useful than starting from a blank AI chat every time
+
+The description should make the prompt feel like a practical, focused tool worth owning and using.
+
+FORMAT
+
+Include:
+
+1. A compelling headline focused on the strongest practical benefit or desired outcome.
+
+2. Exactly 4 persuasive paragraphs.
+
+The 4 paragraphs should naturally cover:
+
+Paragraph 1 — THE PROBLEM
+Identify the specific situation, frustration, task, confusion, or challenge the intended user is likely facing.
+
+Paragraph 2 — THE SOLUTION
+Introduce the prompt as the focused solution and explain what it helps the user do differently.
+
+Paragraph 3 — THE BENEFITS
+Highlight the strongest practical benefits, capabilities, insights, shortcuts, decisions, improvements, or problems the user can address with the prompt.
+
+Paragraph 4 — THE VALUE
+Reinforce why the prompt is useful as a reusable tool, what it can simplify or save the user from having to figure out repeatedly, and why it deserves a place in the user's practical AI toolkit.
+
+COPY STANDARDS
+
+- Write like an experienced direct-response copywriter.
+- Keep the language clear enough for an eighth-grade reader.
+- Use contractions naturally where appropriate.
+- Make the writing human, confident, conversational, and easy to read.
+- Lead with buyer benefits and practical outcomes rather than technical prompt features.
+- Use specific, concrete language rather than vague marketing language.
+- Use short, readable sentences and natural transitions.
+- Make the product feel useful without making it sound complicated.
+- Make every paragraph increase clarity, desire, trust, or perceived usefulness.
+- Keep the positioning narrow and specific to the actual prompt.
+- Focus on the value of the prompt, not on AI technology itself.
+- Avoid generic claims such as &quot;save time,&quot; &quot;work smarter,&quot; or &quot;get better results&quot; unless they are connected to a specific capability of the prompt.
+- Do not turn the description into a tutorial or explanation of how to write prompts.
+
+PROMPT-AS-PRODUCT RULE
+
+The product is ONE AI PROMPT.
+
+Therefore:
+
+- Do not describe it as a report.
+- Do not describe it as an ebook.
+- Do not describe it as a course.
+- Do not describe it as a guide.
+- Do not describe it as a prompt pack.
+- Do not imply that the buyer receives multiple prompts.
+- Do not invent chapters, modules, lessons, worksheets, bonuses, templates, or additional resources.
+- Do not describe features that aren't actually part of the prompt.
+
+If the prompt contains a framework, checklist, workflow, or multiple instructions, describe those as capabilities built into the single prompt.
+
+IMPORTANT PRODUCT-TRUTH RULE
+
+Every important claim must be reasonably supported by the actual prompt.
+
+Do not invent:
+
+- Testimonials
+- Customers
+- Case studies
+- Statistics
+- Research findings
+- Credentials
+- Endorsements
+- Bonuses
+- Prices
+- Discounts
+- Scarcity
+- Deadlines
+- Guarantees
+- Refund policies
+- Income claims
+- Guaranteed results
+
+Do not use fake urgency, false scarcity, manipulative fear, exaggerated hype, or unsupported superlatives.
+
+Do not claim that the buyer will definitely achieve a particular result.
+
+If a benefit depends on the user's inputs, judgment, execution, or external circumstances, phrase it appropriately.
+
+Do not present assumptions as facts.
+
+NAMING RULE
+
+If an official product title, author name, or brand name is provided, reproduce it exactly as provided.
+
+Do not create a new title, subtitle, author, brand, or promise.
+
+If no such information is provided, do not invent one.
+
+IMPORTANT LANGUAGE RULE
+
+Do not unnecessarily use technical language.
+
+The reader should understand the product's practical value even if they know very little about prompt engineering.
+
+Do not reveal the complete prompt or reproduce its full instructions in the product description.
+
+The goal is to sell the usefulness of the prompt, not to give away the product itself.
+
+OUTPUT RULE
+
+Return ONLY the finished product description.
+
+Do not include:
+
+- Analysis
+- Explanation
+- Setup commentary
+- Notes
+- Recommendations
+- Alternative versions
+- A summary of your reasoning
+- Closing notes outside the finished asset
+
+Use clean formatting.
+
+FINAL STRUCTURE:
+
+[Compelling Headline]
+
+[Paragraph 1]
+
+[Paragraph 2]
+
+[Paragraph 3]
+
+[Paragraph 4]
+
+PRODUCT INFORMATION:
+
+Official Product Title: [Offer Name]
+
+Author/Brand: Siva Prasad Mukherjee
+
+PROMPT TO DESCRIBE:
+
+[Insert Your Prompt Here]"> (Prompt content loads dynamically based on inputs) </pre>
+        <button class="copy-button" onclick="copyText(this)">
+          <svg class="icon copy-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <svg class="icon copied-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M4.5 12.75l6 6 9-13.5" /></svg>
+          <span class="button-text">Copy Prompt</span>
+        </button>
+      </div>
+
+      <!-- Prompt #5 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #5</div>
+        <pre class="prompt-text" data-template="TASK
+
+Write the complete best-and-final long-form sales letter for the AI prompt provided below.
+
+Treat the PROMPT itself as the product being sold.
+
+Do not treat it as a report, ebook, course, guide, prompt pack, or collection of prompts unless the prompt itself clearly indicates that it is one.
+
+PRODUCT INTELLIGENCE
+
+Analyze the actual prompt and use its content to determine:
+
+- The exact problem the prompt solves
+- The intended user
+- The situation in which the user would need it
+- The strongest and most desirable benefit
+- The core job the prompt performs
+- The distinctive mechanism, method, framework, or angle built into the prompt
+- The before-and-after transformation the prompt is designed to create
+- The strongest practical insights, decisions, shortcuts, protections, or improvements the user can gain from using it
+- What makes this prompt more useful than simply asking an AI tool a vague question
+- Any important limitations or boundaries that should remain clear
+
+Do not invent product intelligence that isn't reasonably supported by the prompt.
+
+SALES-LETTER GOAL
+
+Make the reader quickly recognize a problem they have, understand why solving it matters, see why their current or common approach may be inefficient or incomplete, understand how this prompt provides a focused solution, and want immediate access because the prompt feels useful, specific, practical, easy to use, and worth owning.
+
+The sales letter should sell the VALUE OF THE PROMPT, not the prompt's wording.
+
+NATURAL SALES PROGRESSION
+
+Structure the sales letter in this progression:
+
+1. A strong, specific headline built around the most desirable advantage, outcome, or relief the prompt can provide.
+
+2. A supporting subheadline that clearly identifies who the prompt is for and what it helps them accomplish.
+
+3. An opening that enters the reader's real situation, frustration, task, decision, or desired outcome without generic warm-up language.
+
+4. A problem-agitation section that makes the difficulty, wasted effort, confusion, missed opportunity, inconsistency, or risk recognizable without exaggeration.
+
+5. A pattern interrupt that reveals the overlooked reason the problem is harder than it appears, or why common approaches often produce weak or inconsistent results.
+
+6. A natural introduction of the prompt as the focused solution.
+
+7. A clear explanation of HOW THE PROMPT WORKS at a conceptual level.
+
+   Explain the underlying mechanism, structure, framework, sequence, or thinking process built into the prompt.
+
+   Do not simply reproduce the prompt or explain every line of its wording.
+
+8. A benefit-rich section showing what the user can use the prompt to:
+   - understand
+   - analyze
+   - decide
+   - create
+   - improve
+   - simplify
+   - avoid
+   - accomplish
+
+   Base these benefits on the actual capabilities of the prompt.
+
+9. Strong persuasive bullet points based on the actual prompt.
+
+   Each bullet should communicate a specific advantage, useful capability, practical takeaway, shortcut, protection, decision, or improvement.
+
+   Do not write generic bullets such as:
+   - &quot;Save time&quot;
+   - &quot;Get better results&quot;
+   - &quot;Work smarter&quot;
+
+   unless the prompt clearly supports a specific version of that benefit.
+
+10. A section explaining why the prompt is practical and easy to use.
+
+    Show how it reduces the user's need to figure out the entire task from scratch.
+
+    Make the prompt feel like a reusable tool rather than merely a piece of information.
+
+11. A &quot;Who This Is For&quot; section based strictly on the actual use case of the prompt.
+
+12. A &quot;Why This Prompt Is Useful&quot; or equivalent value section explaining why having a ready-to-use, structured prompt can save the user time, effort, uncertainty, or repeated trial and error compared with starting from a blank AI chat every time.
+
+13. A clear call to action focused on the immediate practical benefit of getting and using the prompt.
+
+14. A concise closing section that reinforces the core problem, the practical solution, and one final reason to act.
+
+COPY STANDARDS
+
+- Write like an experienced direct-response copywriter who fully understands the product.
+- Keep the language clear enough for an eighth-grade reader.
+- Use contractions naturally.
+- Use a human, confident, conversational tone.
+- Lead with buyer advantages and outcomes rather than describing the prompt's features mechanically.
+- Use specificity, contrast, curiosity, emotional recognition, and practical value without forced cleverness.
+- Use short paragraphs, purposeful subheads, varied sentence lengths, and strong transitions.
+- Make every section earn its place by increasing desire, clarity, trust, or perceived usefulness.
+- Make the copy persuasive without sounding exaggerated or hype-driven.
+- Focus on the user's problem and desired outcome rather than the technical sophistication of the prompt.
+- Keep the positioning narrow and specific.
+- Do not broaden the prompt into a larger promise than it can actually fulfill.
+- Do not sell &quot;AI&quot; as the product. Sell the practical solution the prompt enables.
+- Do not make the prompt sound complicated simply to increase perceived value.
+- Do not reveal unnecessary internal prompt mechanics if doing so would reduce the product's perceived usefulness or make the sales letter read like technical documentation.
+
+PROMPT-AS-PRODUCT RULE
+
+The product is ONE AI PROMPT.
+
+Therefore:
+
+- Do not refer to it as a &quot;report.&quot;
+- Do not refer to it as an &quot;ebook.&quot;
+- Do not refer to it as a &quot;course.&quot;
+- Do not refer to it as a &quot;guide.&quot;
+- Do not refer to it as a &quot;prompt pack.&quot;
+- Do not imply that the buyer is receiving multiple prompts.
+- Do not invent chapters, modules, lessons, worksheets, templates, bonuses, or additional resources.
+- Do not describe a product ecosystem that does not exist.
+
+If the prompt itself contains a framework, checklist, workflow, or multi-step process, describe that as part of the prompt's functionality—not as a separate product.
+
+IMPORTANT DISTINCTION
+
+Do not sell the prompt by saying:
+
+&quot;You are buying a prompt.&quot;
+
+Instead, sell the practical value of having a structured, reusable prompt that helps the user accomplish a specific task more effectively.
+
+The reader should understand:
+
+PROBLEM
+→ Why the task is difficult
+
+BETTER APPROACH
+→ What the prompt changes
+
+PROMPT
+→ The focused tool that enables that approach
+
+OUTCOME
+→ What the user can do more clearly, efficiently, consistently, or effectively
+
+TRUTH AND SAFETY RULES
+
+- Do not invent testimonials.
+- Do not invent customers or case studies.
+- Do not invent personal experiences.
+- Do not invent statistics or research findings.
+- Do not invent credentials.
+- Do not invent endorsements.
+- Do not invent bonuses.
+- Do not invent prices.
+- Do not invent discounts.
+- Do not invent scarcity.
+- Do not invent deadlines.
+- Do not invent guarantees.
+- Do not invent refund policies.
+- Do not make income claims.
+- Do not claim the buyer will definitely achieve a particular result.
+- Do not use fake urgency.
+- Do not use false scarcity.
+- Do not use manipulative fear.
+- Do not use exaggerated or unsupported superlatives.
+- Do not make claims that cannot reasonably be supported by the prompt itself.
+- If a benefit depends on the user's execution, skill, inputs, or external circumstances, phrase the benefit appropriately.
+- Never present assumptions as established facts.
+
+IMPORTANT PRODUCT-TRUTH RULE
+
+Every major promise in the sales letter must be traceable to an actual capability, mechanism, or intended use of the prompt.
+
+If the prompt does not support a claim, do not make the claim.
+
+If information about the intended audience, price, platform, author, brand, or offer is not provided, do not invent it.
+
+OUTPUT RULE
+
+Return ONLY the polished, ready-to-use long-form sales letter.
+
+Do not provide:
+- analysis
+- explanation
+- commentary
+- notes
+- recommendations
+- alternative versions
+- a summary of the prompt
+- an explanation of how you wrote the sales letter
+
+Use clean formatting, strong headings, persuasive bullets, short readable paragraphs, and a clear call to action.
+
+PROMPT TO SELL:
+
+[Insert Your Prompt Here]"> (Prompt content loads dynamically based on inputs) </pre>
+        <button class="copy-button" onclick="copyText(this)">
+          <svg class="icon copy-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <svg class="icon copied-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M4.5 12.75l6 6 9-13.5" /></svg>
+          <span class="button-text">Copy Prompt</span>
+        </button>
+      </div>
+
+      <!-- Prompt #6 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #6</div>
+        <pre class="prompt-text" data-template="Convert this into a Graphy.com Sales Page.
+
+RULES (MANDATORY)
+
+Ensure that the output complies with Graphy.com's character limits:
+
+- Title: Maximum 55 characters
+- Description: Maximum 1,000 characters">Convert this into a Graphy.com Sales Page.
+
+RULES (MANDATORY)
+
+Ensure that the output complies with Graphy.com's character limits:
+
+- Title: Maximum 55 characters
+- Description: Maximum 1,000 characters</pre>
+        <button class="copy-button" onclick="copyText(this)">
+          <svg class="icon copy-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <svg class="icon copied-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M4.5 12.75l6 6 9-13.5" /></svg>
+          <span class="button-text">Copy Prompt</span>
+        </button>
+      </div>
+
+      <!-- Prompt #7 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #7</div>
+        <pre class="prompt-text" data-template="Answer the following prompt in Bengali (India).
+
+Rules:
+- Use only Bengali (India).
+- Always address the reader as &quot;আপনি&quot;.
+- Never use &quot;তুমি&quot; or &quot;তুই&quot;.
+- Use a natural Kolkata-style conversational tone.
+- Use natural, modern Bengali (India).
+- Avoid Bangladeshi vocabulary, spelling, and expressions.
+
+PROMPT
+
+Create the actual finished sales-page promotional graphic now using ChatGPT's image-generation capability.
+
+IMPORTANT:
+
+There is NO existing product image, ecover, book cover, mockup, screenshot, or visual reference to use.
+
+Do NOT ask me to upload an image.
+
+Do NOT request an existing product visual.
+
+Create the entire graphic completely from scratch.
+
+Use the product information, product description, positioning, target audience, strongest benefit, sales message, and other relevant information already established in this conversation as the source of truth.
+
+Do not ask me to repeat information that is already available in this conversation.
+
+Create the actual best-and-final image directly inside this chat.
+
+Do not use Python, HTML, CSS, SVG, canvas, presentation software, or any other code-based design method.
+
+Do not return an image prompt, design brief, plan, code, instructions, or written description.
+
+Render ONE polished final image only.
+
+==================================================
+VISUAL CONCEPT
+==================================================
+
+Create a premium 16:9 sales-page promotional graphic that visually communicates the actual product and its strongest practical benefit.
+
+The visual concept must be developed from scratch based on:
+
+- What the product actually is
+- The problem it solves
+- Who it is for
+- The strongest benefit
+- The distinctive approach or mechanism
+- The sales message already established in this conversation
+
+Do not create a generic digital-product advertisement.
+
+Do not simply place text over an abstract background.
+
+Develop one strong, topic-relevant visual concept that makes the product's value understandable within seconds.
+
+If the product is an AI Prompt, represent it as a premium digital AI tool or focused AI workflow concept rather than as a book, ebook, report, course, guide, prompt pack, or collection of prompts.
+
+The visual representation must accurately match the actual product category.
+
+==================================================
+SALES MESSAGE
+==================================================
+
+Use the product description and sales copy already established immediately before this prompt to identify the strongest sales message.
+
+Select ONE dominant benefit-driven message for the main headline.
+
+Do not invent a new positioning.
+
+Do not broaden the product's promise.
+
+The headline should communicate the most desirable practical outcome, problem solved, or meaningful improvement that is genuinely supported by the product.
+
+==================================================
+COMPOSITION
+==================================================
+
+Create a wide 16:9 composition.
+
+Use a strong two-part visual hierarchy:
+
+- One side: a compelling, original visual representation of the product
+- Other side: the main sales message and supporting information
+
+The product visual and headline should be the two dominant elements.
+
+Keep the product visual large and clearly recognizable.
+
+Use:
+
+- One bold benefit-driven headline
+- One short supporting sentence
+- Exactly 3 short benefit callouts
+- Author or brand name once, if already established
+- One short CTA only when it genuinely improves clarity
+
+Keep every benefit callout concise, ideally approximately 3–7 words.
+
+Do not use paragraphs.
+
+Do not overcrowd the composition.
+
+Keep generous space around all major elements.
+
+Keep all important text comfortably inside safe margins.
+
+==================================================
+VISUAL QUALITY STANDARD
+==================================================
+
+Make the finished image feel:
+
+- Premium
+- Dramatic
+- Modern
+- Professionally art-directed
+- Purposeful
+- Visually distinctive
+- Conversion-focused
+- Appropriate for a digital-product sales page
+
+Use:
+
+- Strong visual hierarchy
+- Confident typography
+- Purposeful contrast
+- Dimensional lighting
+- Controlled depth
+- Subtle texture
+- Topic-relevant visual storytelling
+- Sophisticated composition
+- Clear focal points
+
+Every visual element must have a purpose.
+
+Avoid:
+
+- Generic stock-photo layouts
+- Random decorative elements
+- Excessive icons
+- Icon piles
+- Tiny text
+- Flat presentation
+- Weak contrast
+- Excessive visual effects
+- Awkward empty areas
+- Visual noise
+- Presentation-slide aesthetics
+- Generic web-banner styling
+
+The final image should look like a professionally art-directed sales campaign asset.
+
+==================================================
+PRODUCT VISUAL
+==================================================
+
+Because there is no existing product visual, create an ORIGINAL representation of the product from scratch.
+
+The product visual should:
+
+- Clearly communicate what the product is
+- Feel substantial and valuable
+- Fit naturally into the overall composition
+- Use visual metaphors relevant to the product's actual subject
+- Support the sales message rather than compete with it
+
+Do not invent a physical product that does not exist.
+
+Do not create a fake book cover, fake software interface, fake app, fake certificate, or fake product packaging unless such a representation is genuinely appropriate to the product.
+
+Do not add unrelated objects simply to make the image look more elaborate.
+
+==================================================
+TEXT RULES
+==================================================
+
+Use the product information already established in this conversation.
+
+Do not invent product claims.
+
+The graphic may contain:
+
+1. One main headline
+2. One short supporting sentence
+3. Exactly 3 short benefit callouts
+4. Author or brand name once, if provided
+5. One CTA, if useful
+
+Keep copy minimal.
+
+Do not:
+
+- Repeat the headline
+- Repeat the product name unnecessarily
+- Use bullet-list paragraphs
+- Add feature dumps
+- Add multiple competing headlines
+- Add excessive badges
+- Add fake proof
+- Add unnecessary technical explanations
+- Reveal the complete prompt
+- Reproduce the complete product description
+
+The purpose of the graphic is to sell the VALUE of the product, not reveal the product itself.
+
+==================================================
+ACCURACY AND TRUST RULES
+==================================================
+
+Use only information already established in this conversation.
+
+Do not invent:
+
+- Testimonials
+- Customers
+- Case studies
+- Statistics
+- Research findings
+- Awards
+- Rankings
+- Endorsements
+- Credentials
+- Prices
+- Discounts
+- Bonuses
+- Guarantees
+- Scarcity
+- Deadlines
+- Income claims
+- Guaranteed results
+- Fake logos
+- Fake certifications
+- Unsupported performance claims
+
+Do not use exaggerated claims simply to make the graphic more persuasive.
+
+The visual and copy must remain commercially persuasive while being factually honest.
+
+==================================================
+LANGUAGE RULES
+==================================================
+
+Follow the Bengali (India) language rules established above.
+
+Use:
+
+- Natural Bengali (India)
+- Modern Kolkata-style Bengali
+- Clear and conversational wording
+- &quot;আপনি&quot; where direct address is required
+
+Never use:
+
+- &quot;তুমি&quot;
+- &quot;তুই&quot;
+- Bangladeshi vocabulary
+- Bangladeshi spelling
+- Bangladeshi expressions
+- Unnecessarily literary or archaic Bengali
+
+English may remain where genuinely necessary for:
+
+- Product names
+- Proper names
+- Established platform terminology
+- Commonly used digital/AI terminology
+
+==================================================
+TYPOGRAPHY AND READABILITY
+==================================================
+
+Make all visible text large, clean, and highly readable.
+
+Before finalizing, silently check:
+
+- Bengali spelling
+- English spelling
+- Product name accuracy
+- Author/brand name accuracy
+- Word spacing
+- Letter spacing
+- Alignment
+- Cropping
+- Contrast
+- Safe margins
+- Mobile and desktop readability
+
+Do not generate:
+
+- Nonsense text
+- Placeholder text
+- Duplicated words
+- Misspelled names
+- Accidental logos
+- Unreadable lettering
+- Decorative text with no meaning
+
+==================================================
+FINAL QUALITY CHECK
+==================================================
+
+Before generating the image, silently verify:
+
+- No existing image is required.
+- No image upload is necessary.
+- The entire visual has been created from scratch.
+- The product is accurately represented.
+- The product category has not been changed.
+- The main headline communicates one strong benefit.
+- The sales message is supported by the actual product.
+- Exactly 3 short benefit callouts are used.
+- The visual hierarchy is immediately clear.
+- The product visual and headline are the dominant elements.
+- All important text is readable.
+- The composition has generous safe margins.
+- The graphic feels premium and professionally art-directed.
+- No unsupported claims have been added.
+- No unnecessary visual clutter has been added.
+
+==================================================
+FINAL OUTPUT
+==================================================
+
+Generate ONE finished, production-ready 16:9 sales-page promotional graphic directly inside the chat.
+
+Do NOT:
+
+- Ask for an image
+- Ask for an ecover
+- Ask for a mockup
+- Ask for a screenshot
+- Ask for a reference image
+- Return an image prompt
+- Return a design brief
+- Return a plan
+- Return code
+- Return instructions
+- Return a written explanation
+
+Create the complete promotional graphic from scratch using the information already established in this conversation.
+
+Return only ONE finished final image.">Answer the following prompt in Bengali (India). (Content omitted for brevity in source, loads via template) </pre>
+        <button class="copy-button" onclick="copyText(this)">
+          <svg class="icon copy-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <svg class="icon copied-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M4.5 12.75l6 6 9-13.5" /></svg>
+          <span class="button-text">Copy Prompt</span>
+        </button>
+      </div>
+
+      <!-- Prompt #8 -->
+      <div class="prompt-card">
+        <div class="prompt-label">Prompt #8</div>
+        <pre class="prompt-text" data-template="Please tailor it to a 16:9 sales-page banner">Please tailor it to a 16:9 sales-page banner</pre>
+        <button class="copy-button" onclick="copyText(this)">
+          <svg class="icon copy-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <svg class="icon copied-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M4.5 12.75l6 6 9-13.5" /></svg>
+          <span class="button-text">Copy Prompt</span>
+        </button>
+      </div>
+
+    </main>
+
+    <footer>
+        Copyright &copy; <script>document.write(new Date().getFullYear())</script> Siva Prasad Mukherjee. All Rights Reserved.
+    </footer>
+  </div>
+
+  <script>
+    const promptInput = document.getElementById('promptInput');
+    const offerNameInput = document.getElementById('offerNameInput');
+    const promptDisplayNodes = document.querySelectorAll('.prompt-text');
+
+    function updatePrompts() {
+      const promptVal = promptInput.value.trim() || "[Insert Your Prompt Here]";
+      const offerVal = offerNameInput.value.trim() || "[Offer Name]";
+
+      promptDisplayNodes.forEach(node => {
+        const template = node.getAttribute('data-template');
+        let updated = template.split('[Insert Your Prompt Here]').join(promptVal);
+        updated = updated.split('[Offer Name]').join(offerVal);
+        node.textContent = updated;
+      });
+    }
+
+    promptInput.addEventListener('input', updatePrompts);
+    offerNameInput.addEventListener('input', updatePrompts);
+
+    // Initial run to clear placeholders if needed
+    updatePrompts();
+
+    function copyText(btn) {
+      const text = btn.previousElementSibling.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btnText = btn.querySelector('.button-text');
+        const prevText = btnText.textContent;
+        btnText.textContent = 'Copied!';
+        btn.classList.add('copied');
+        
+        setTimeout(() => {
+          btnText.textContent = prevText;
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+
+</body>
+</html>
