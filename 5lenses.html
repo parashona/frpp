@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Five Lenses - Content Review</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #064e3b; 
+      --bg-gradient-end: #020617;
+      --card-bg: rgba(16, 185, 129, 0.05);
+      --card-border: rgba(16, 185, 129, 0.2);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-heading: #ffffff;
+      --accent-primary: #10b981; 
+      --accent-hover: #34d399;
+      --accent-success: #059669;
+      --code-bg: rgba(0, 0, 0, 0.4);
+      --shadow-color: rgba(0, 0, 0, 0.5);
+      --input-bg: rgba(0, 0, 0, 0.3);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 40px 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .container {
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      flex-grow: 1;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .input-section {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 40px var(--shadow-color);
+      backdrop-filter: blur(12px);
+    }
+    .field-group {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--accent-primary);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+    textarea {
+      width: 100%;
+      padding: 16px;
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      transition: all 0.2s;
+      min-height: 180px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      background: rgba(0, 0, 0, 0.4);
+    }
+    .prompt-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: 0 10px 40px var(--shadow-color);
+      backdrop-filter: blur(12px);
+      padding: 35px;
+      display: flex;
+      flex-direction: column;
+    }
+    .prompt-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .prompt-label::after {
+      content: "";
+      height: 1px;
+      flex-grow: 1;
+      background: var(--card-border);
+    }
+    .prompt-text {
+      background-color: var(--code-bg);
+      padding: 24px;
+      border-radius: 12px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.95rem;
+      color: #ecfdf5;
+      line-height: 1.6;
+      margin-bottom: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      max-height: 600px;
+      overflow-y: auto;
+    }
+    .copy-button {
+      align-self: flex-end;
+      padding: 14px 28px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #ffffff;
+      background-color: var(--accent-primary);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-transform: uppercase;
+    }
+    .copy-button:hover {
+      background-color: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+    .copy-button.copied {
+      background-color: var(--accent-success);
+    }
+    .icon { width: 18px; height: 18px; }
+    .copied-icon { display: none; }
+    .copy-button.copied .copy-icon { display: none; }
+    .copy-button.copied .copied-icon { display: inline-block; }
+
+    footer {
+        margin-top: 60px;
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        padding-bottom: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Five Lenses</h1>
+    </header>
+
+    <div class="input-section">
+      <div class="field-group">
+        <label for="contentInput">CONTENT</label>
+        <textarea id="contentInput" placeholder="আপনার কনটেন্ট এখানে দিন..."></textarea>
+      </div>
+    </div>
+
+    <main>
+      <div class="prompt-card">
+        <div class="prompt-label">REVIEW PROMPT</div>
+        <pre id="displayPrompt" class="prompt-text">নীচে দেওয়া কনটেন্টটাকে তুমি নীচের পাঁচটা লেন্স দিয়ে রিভিউ করো এবং তোমার পর্যবেক্ষণ বিস্তারিতভাবে জানাও।
+
+প্রতিটি লেন্সে শুধু সমস্যা খোঁজার জন্য সমস্যা খুঁজবে না। যেখানে সত্যিই উন্নতির সুযোগ আছে, শুধু সেগুলো চিহ্নিত করবে। একই সমস্যা একাধিক লেন্সে প্রযোজ্য হলে অযথা পুনরাবৃত্তি করবে না; সবচেয়ে প্রাসঙ্গিক লেন্সে রাখবে।
+
+LENSES
+
+1. Seasoned Writing Editor Lens
+
+Read this as a seasoned writing editor who hates generic words and sentences.
+
+Point out anything:
+- vague
+- generic or cliché
+- repetitive
+- unnecessary
+- wordy or imprecise
+- that can be removed without losing meaning
+
+মূল প্রশ্ন:
+লেখাটা কোথায় ভালোভাবে লেখা হয়নি এবং কোথায় কম কথায় আরও শক্তিশালীভাবে বলা যায়?
+
+2. First-Time Reader Lens
+
+Now read it as if you are reading this idea for the first time.
+
+Tell me:
+- where you get confused
+- where you lose interest
+- where you have to read a sentence twice
+- where the context or explanation is insufficient
+- what sounds too formal, unnatural, or writerly
+
+মূল প্রশ্ন:
+নতুন পাঠক কোথায় বুঝতে, অনুসরণ করতে বা আগ্রহ ধরে রাখতে গিয়ে আটকে যাবে?
+
+3. Knowledgeable Reader Lens
+
+Now read it as someone who already knows about the subject.
+
+Identify:
+- what feels too basic
+- what feels obvious
+- what does not add much value for a knowledgeable reader
+- where the explanation could offer a sharper distinction, deeper insight, or more useful perspective
+
+মূল প্রশ্ন:
+বিষয়টি জানা পাঠকের জন্য কোথায় কনটেন্টটা অতিরিক্ত basic, predictable বা কম valuable?
+
+4. “So What?” Lens
+
+Now read it as a reader asking:
+
+“So what? Why should I care about this?”
+
+Identify:
+- ideas that are true but not particularly useful
+- sections that provide information without enough insight or value
+- places where the practical meaning or implication is missing
+- claims or points that do not give the reader a meaningful takeaway
+
+মূল প্রশ্ন:
+এই কনটেন্ট পড়ার পরে পাঠক আসলে কী পেলেন যা তার কাছে মূল্যবান?
+
+5. Reader Journey Lens
+
+Now read the whole piece as a continuous reading experience.
+
+Identify:
+- weak or unnecessary openings
+- unnecessary detours
+- repetition or circular movement
+- abrupt transitions
+- sections that do not create a natural reason to continue reading
+- conclusions that feel sudden, weak, predictable, or disconnected from the main idea
+
+মূল প্রশ্ন:
+লেখাটা কি পাঠককে স্বাভাবিকভাবে এক idea থেকে পরের idea-তে নিয়ে গিয়ে একটি satisfying ending-এ পৌঁছে দিচ্ছে?
+
+REVIEW APPROACH
+
+প্রথমে পাঁচটি লেন্স দিয়ে পুরো কনটেন্টটা বিচার করো।
+
+তারপর observations-গুলোকে শুধু lens অনুযায়ী আলাদা করে সাজানোর বদলে গুরুত্ব অনুযায়ী বিচার করো।
+
+যে সমস্যাগুলো কনটেন্টের clarity, usefulness, reader engagement, depth বা overall quality-তে সবচেয়ে বেশি প্রভাব ফেলছে, সেগুলোকে বেশি গুরুত্ব দাও।
+
+Minor wording বা polishing issue-এর চেয়ে structural বা substantive issue-কে priority দাও।
+
+একই সমস্যাকে ভিন্ন ভাষায় বারবার বলবে না।
+
+PRIORITY
+
+Feedback-কে তিনটি priority level-এ ভাগ করো:
+
+P1 — Must Fix
+
+যে সমস্যাগুলো ঠিক না করলে কনটেন্টের clarity, usefulness, depth বা reader experience উল্লেখযোগ্যভাবে ক্ষতিগ্রস্ত হয়।
+
+P2 — Should Fix
+
+যে সমস্যাগুলো কনটেন্টকে noticeably দুর্বল করছে, কিন্তু মূল বক্তব্যকে নষ্ট করছে না।
+
+P3 — Nice to Fix
+
+ছোটখাটো wording, rhythm, repetition বা polish-এর বিষয়।
+
+প্রতিটি গুরুত্বপূর্ণ observation-এর ক্ষেত্রে বলো:
+
+সমস্যা: কী সমস্যা।
+
+কোথায়: কনটেন্টের কোন অংশে সমস্যা।
+
+কেন গুরুত্বপূর্ণ: এটি পাঠকের experience বা কনটেন্টের quality-কে কীভাবে প্রভাবিত করছে।
+
+কী পরিবর্তন দরকার: কীভাবে উন্নত করা যায়।
+
+পুরো কনটেন্ট rewrite করবে না, যদি না আলাদাভাবে বলা হয়।
+
+SUMMARY TABLE
+
+উত্তরের শেষে তোমার পর্যবেক্ষণের সারসংক্ষেপ নীচের দেওয়া টেবিলের কাঠামোতে সাজিয়ে দাও।
+
+| লেন্স ও উদ্দেশ্য | এই লেন্স এডিটিংয়ের জন্য কী কী আইডেন্টিফাই করেছে | কেন সেগুলো আইডেন্টিফাই করেছে? ফলস্বরূপ কনটেন্টের কোন মান বাড়বে? |
+|---|---|---|
+| Seasoned Writing Editor Lens — অভিজ্ঞ ও কঠোর সম্পাদকের দৃষ্টিভঙ্গি | লেখাটা কোথায় ভালোভাবে লেখা হয়নি? | ভাষা আরও precise, tight ও শক্তিশালী হবে |
+| First-Time Reader Lens — বিষয়টি প্রথমবার পড়ছে এমন পাঠকের দৃষ্টিভঙ্গি | নতুন পাঠক কোথায় বুঝতে বা পড়তে গিয়ে আটকে যাবে? | clarity, readability ও engagement বাড়বে |
+| Knowledgeable Reader Lens — বিষয়টি আগে থেকেই জানে এমন পাঠকের দৃষ্টিভঙ্গি | বিষয়টি জানা পাঠকের জন্য কোথায় এটা অতিরিক্ত basic, predictable বা কম valuable? | depth, originality ও perceived value বাড়বে |
+| “So What?” Lens — পাঠকের কাছে বাস্তব মূল্য খোঁজার দৃষ্টিভঙ্গি | কোথায় information আছে কিন্তু যথেষ্ট insight, implication বা useful takeaway নেই? | usefulness, relevance ও reader value বাড়বে |
+| Reader Journey Lens — শুরু থেকে শেষ পর্যন্ত পাঠকের যাত্রার দৃষ্টিভঙ্গি | কোথায় flow ভাঙছে, detour হচ্ছে বা পরের অংশে যাওয়ার কারণ দুর্বল? | flow, coherence, momentum ও overall reading experience বাড়বে |
+
+CONTENT
+
+[এখানে কনটেন্ট দিন]</pre>
+        <button class="copy-button" id="copyBtn">
+          <svg class="icon copy-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+          <svg class="icon copied-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M4.5 12.75l6 6 9-13.5" /></svg>
+          <span class="button-text">Copy Prompt</span>
+        </button>
+      </div>
+    </main>
+
+    <footer>
+        <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Five Lenses Review Tool.</p>
+    </footer>
+  </div>
+
+  <script>
+    const contentInput = document.getElementById('contentInput');
+    const displayPrompt = document.getElementById('displayPrompt');
+    const copyBtn = document.getElementById('copyBtn');
+    
+    // Store the raw initial template
+    const template = displayPrompt.textContent;
+    const placeholder = "[এখানে কনটেন্ট দিন]";
+
+    function updateDisplay() {
+      const userText = contentInput.value.trim();
+      
+      if (userText === "") {
+        displayPrompt.textContent = template;
+      } else {
+        // Global replacement of the placeholder string
+        let newContent = template.split(placeholder).join(userText);
+        displayPrompt.textContent = newContent;
+      }
+    }
+
+    // Listen for typing
+    contentInput.addEventListener('input', updateDisplay);
+
+    // Copy function
+    copyBtn.addEventListener('click', () => {
+      const textToCopy = displayPrompt.textContent;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const btnText = copyBtn.querySelector('.button-text');
+        copyBtn.classList.add('copied');
+        btnText.textContent = 'Copied!';
+        
+        setTimeout(() => {
+          copyBtn.classList.remove('copied');
+          btnText.textContent = 'Copy Prompt';
+        }, 2000);
+      });
+    });
+  </script>
+
+</body>
+</html>
