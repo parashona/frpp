@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Promote Report - Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #020617;
+      --bg-gradient-end: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.4);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent-primary: #22d3ee;
+      --accent-hover: #67e8f9;
+      --accent-success: #10b981;
+      --accent-danger: #f43f5e;
+      --code-bg: rgba(0, 0, 0, 0.3);
+      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: fixed linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 60px 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      max-width: 850px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .prompt-workflow {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .step-label {
+      font-weight: 800;
+      font-size: 0.8rem;
+      background: var(--accent-primary);
+      color: #020617;
+      padding: 5px 16px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .clear-btn {
+      background: transparent;
+      border: 1px solid var(--accent-danger);
+      color: var(--accent-danger);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+
+    .clear-btn:hover {
+      background: var(--accent-danger);
+      color: white;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .field-block {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .dynamic-textarea {
+      width: 100%;
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 15px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      min-height: 80px;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .dynamic-textarea:focus {
+      border-color: var(--accent-primary);
+    }
+
+    .prompt-content {
+      background: var(--code-bg);
+      padding: 30px;
+      border-radius: 12px;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+      border: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 25px;
+      line-height: 1.6;
+      word-break: break-word;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .prompt-content::-webkit-scrollbar { width: 8px; }
+    .prompt-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+    .prompt-content::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
+
+    .btn {
+      padding: 14px 32px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s;
+      width: 100%;
+      text-decoration: none;
+      border: none;
+    }
+
+    .copy-btn {
+      background: rgba(34, 211, 238, 0.1);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-primary);
+      color: #020617;
+    }
+
+    .copy-btn.copied {
+      background: var(--accent-success);
+      border-color: var(--accent-success);
+      color: white;
+    }
+
+    .footer {
+      margin-top: 80px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--card-border);
+      padding-top: 40px;
+      width: 100%;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 1.8rem; }
+      .step-card { padding: 25px; }
+      .prompt-content { font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Promote Report</h1>
+    </header>
+
+    <div class="prompt-workflow">
+      
+      <!-- Inputs Card -->
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-label">Data Entry</span>
+          <button class="clear-btn" onclick="clearAll()">Clear All</button>
+        </div>
+        
+        <div class="input-grid">
+          <div class="field-block">
+            <label>[DESCRIPTION]</label>
+            <textarea id="in_desc" class="dynamic-textarea" placeholder="Paste report description..." oninput="updatePrompts()"></textarea>
+          </div>
+          
+          <div class="field-block">
+            <label>[Text for Image]</label>
+            <textarea id="in_img_text" class="dynamic-textarea" placeholder="Enter text for visual..." oninput="updatePrompts()"></textarea>
+          </div>
+          
+          <div class="field-block">
+            <label>[Selected Title]</label>
+            <textarea id="in_title" class="dynamic-textarea" placeholder="Enter chosen title..." oninput="updatePrompts()"></textarea>
+          </div>
+          
+          <div class="field-block">
+            <label>[Sub-title]</label>
+            <textarea id="in_subtitle" class="dynamic-textarea" placeholder="Enter chosen sub-title..." oninput="updatePrompts()"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Card 1 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #1</span></div>
+        <div class="prompt-content" id="p1"></div>
+        <button class="btn copy-btn" onclick="copyText('p1', this)"><span>Copy Prompt #1</span></button>
+      </div>
+
+      <!-- Result Card 2 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #2</span></div>
+        <div class="prompt-content" id="p2">এই free report-এর আগে ব্যবহার করার জন্য একটি সংক্ষিপ্ত Bengali India landing-page bridge লিখুন, যা পাঠককে বুঝতে সাহায্য করবে যে কেন তার এই রিপোর্টটি পড়া দরকার।</div>
+        <button class="btn copy-btn" onclick="copyText('p2', this)"><span>Copy Prompt #2</span></button>
+      </div>
+
+      <!-- Result Card 3 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #3</span></div>
+        <div class="prompt-content" id="p3"></div>
+        <button class="btn copy-btn" onclick="copyText('p3', this)"><span>Copy Prompt #3</span></button>
+      </div>
+
+      <!-- Result Card 4 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #4</span></div>
+        <div class="prompt-content" id="p4">এই free report-এর পরের paid product-এর জন্য এমন একটি সম্পূর্ণ কাঠামো তৈরি করুন।</div>
+        <button class="btn copy-btn" onclick="copyText('p4', this)"><span>Copy Prompt #4</span></button>
+      </div>
+
+      <!-- Result Card 5 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #5</span></div>
+        <div class="prompt-content" id="p5"></div>
+        <button class="btn copy-btn" onclick="copyText('p5', this)"><span>Copy Prompt #5</span></button>
+      </div>
+
+      <!-- Result Card 6 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #6</span></div>
+        <div class="prompt-content" id="p6"></div>
+        <button class="btn copy-btn" onclick="copyText('p6', this)"><span>Copy Prompt #6</span></button>
+      </div>
+
+      <!-- Result Card 7 -->
+      <div class="step-card">
+        <div class="step-header"><span class="step-label">Prompt #7</span></div>
+        <div class="prompt-content" id="p7"></div>
+        <button class="btn copy-btn" onclick="copyText('p7', this)"><span>Copy Prompt #7</span></button>
+      </div>
+
+    </div>
+
+    <footer class="footer">
+      <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Siva Prasad Mukherjee. All Rights Reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    const templates = {
+      p1: `Here is my product, in the form of a free report:\n\n[DESCRIPTION]\n\nWhat does someone need to understand, decide, fix or accomplish BEFORE they are ready to download this?\nIdentify any missing steps between where my prospect is now and where this product begins.`,
+      
+      p3: `Facebook Feed Image, aspect ratio = 1080 × 1350 px, with this text.\n\nRULE (MANDATORY)\nDon't delete, edit, and add any text.\n\nCOLOR PALETTE:\nUse this exact 5-color palette as the primary visual system:\n\n• #a4efde | Light Mint: dominant background and main breathing space\n• #6ccd9c | Medium Mint Green: secondary surfaces, soft gradients, depth and supporting areas\n• #3da990 | Deep Teal: primary dark colour for headlines, typography, structural elements and strong visual anchors\n• #3caf2a | Bright Green: selective accent colour for emphasis, highlights and attention points\n• #7ebd2e | Lime Green: minimal secondary highlight for subtle tonal variation\n\nCOLOR HIERARCHY:\nUse the palette with clear dominance rather than equal distribution. Let Light Mint dominate the composition, Medium Mint Green create secondary depth, Deep Teal provide the strongest contrast and visual structure, Bright Green attract attention to selected focal elements, and Lime Green remain a very limited highlight.\n\nAPPROXIMATE USAGE:\n60% Light Mint\n25% Medium Mint Green\n10% Deep Teal\n4% Bright Green\n1% Lime Green\n\nVISUAL PRINCIPLE:\nCreate a clean, premium, fresh and intelligent colour system. Use the light mint tones to create spaciousness and softness, Deep Teal to establish readability and authority, and the brighter greens only as controlled attention accents. Maintain strong contrast between light backgrounds and Deep Teal typography. Avoid using all five colours with equal visual weight.\n\nOVERALL COLOUR FEEL:\nFresh mint + sophisticated teal + restrained energetic green. Premium, modern, friendly and polished, but never childish, neon-heavy, oversaturated or visually cluttered.\n\nTEXT\n\n[Text for Image]`,
+      
+      p5: `CONTEXT\n\n- "Title" expresses: What's in it for the reader.\n- "Sub-title" reinforces the promise made in the title by explaining why it is important to the reader.\n- "Body" delivers on the promise using supporting logic and evidence, organized in the most suitable structure to ensure the content is coherent and easy to follow.\n- "Bullet Points" emphasize the key ways the content will benefit the reader.\n- "Core Message" is the single central idea the content is intended to communicate.\n- "Call to Action (CTA)" is the action the content encourages the reader to take after consuming it.\n\nMy free report concept is:\n\n[DESCRIPTION]\n\nGenerate 25 possible sub-titles.\nAvoid exaggerated promises and generic phrases such as "Ultimate Guide."\nMake the titles specific enough that the right person immediately understands why the report is relevant to them.`,
+      
+      p6: `I would go for this title:\n\n[Selected Title]\n\nPlease identify the best "Sub-title" reinforces the promise made in the title by explaining why it is important to the reader.\n\nIdentify the best "Sub-title" based on the CONTEXT, regardless of whether it is explicitly stated or implied in the content.\n\nCONTEXT\n\n- "Title" expresses: What's in it for the reader.\n- "Sub-title" reinforces the promise made in the title by explaining why it is important to the reader.\n- "Body" delivers on the promise using supporting logic and evidence, organized in the most suitable structure to ensure the content is coherent and easy to follow.\n- "Bullet Points" emphasize the key ways the content will benefit the reader.\n- "Core Message" is the single central idea the content is intended to communicate.\n- "Call to Action (CTA)" is the action the content encourages the reader to take after consuming it.`,
+      
+      p7: `[Selected Title]\n\n[Sub-title]\n\nDownload for FREE:\n\n👉 [URL]`
+    };
+
+    function updatePrompts() {
+      const desc = document.getElementById('in_desc').value.trim() || "[DESCRIPTION]";
+      const imgText = document.getElementById('in_img_text').value.trim() || "[Text for Image]";
+      const title = document.getElementById('in_title').value.trim() || "[Selected Title]";
+      const subtitle = document.getElementById('in_subtitle').value.trim() || "[Sub-title]";
+
+      document.getElementById('p1').innerText = templates.p1.split("[DESCRIPTION]").join(desc);
+      document.getElementById('p3').innerText = templates.p3.split("[Text for Image]").join(imgText);
+      document.getElementById('p5').innerText = templates.p5.split("[DESCRIPTION]").join(desc);
+      document.getElementById('p6').innerText = templates.p6.split("[Selected Title]").join(title);
+      document.getElementById('p7').innerText = templates.p7.split("[Selected Title]").join(title).split("[Sub-title]").join(subtitle);
+    }
+
+    function clearAll() {
+      document.getElementById('in_desc').value = "";
+      document.getElementById('in_img_text').value = "";
+      document.getElementById('in_title').value = "";
+      document.getElementById('in_subtitle').value = "";
+      updatePrompts();
+    }
+
+    function copyText(id, btn) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `<span>Copied to Clipboard!</span>`;
+        btn.classList.add('copied');
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    window.onload = updatePrompts;
+  </script>
+</body>
+</html>
